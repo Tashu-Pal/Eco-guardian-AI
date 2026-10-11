@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #07140f;
+  --ink: #e7f4ea;
+  --muted: #9bb8a6;
+  --line: rgba(167, 243, 188, 0.14);
+  --accent: #3ddc84;
+  --warn: #f0b429;
+  --hot: #ff6b4a;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+body {
+  min-height: 100vh;
+  font-family: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+}
+
+.sans {
+  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+.grid-bg {
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(61, 220, 132, 0.18), transparent),
+    linear-gradient(rgba(167, 243, 188, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(167, 243, 188, 0.04) 1px, transparent 1px);
+  background-size: auto, 48px 48px, 48px 48px;
+}
+
+.glass {
+  background: rgba(10, 28, 20, 0.72);
+  border: 1px solid var(--line);
+  backdrop-filter: blur(16px);
+}

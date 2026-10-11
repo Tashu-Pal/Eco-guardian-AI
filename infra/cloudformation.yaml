@@ -1,0 +1,76 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: EcoGuardian AI — S3 evidence bucket, SNS fan-out, IAM for the app.
+
+Parameters:
+  AppName:
+    Type: String
+    Default: ecoguardian-ai
+
+Resources:
+  EvidenceBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${AppName}-reports-${AWS::AccountId}"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders: ["*"]
+            AllowedMethods: [GET, PUT, POST]
+            AllowedOrigins: ["*"]
+            MaxAge: 3600
+      LifecycleConfiguration:
+        Rules:
+          - Id: RetainEvidence
+            Status: Enabled
+            ExpirationInDays: 365
+
+  DepartmentTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub "${AppName}-department-alerts"
+      DisplayName: EcoGuardian department alerts
+
+  AppUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: !Sub "${AppName}-runtime"
+
+  AppPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: !Sub "${AppName}-runtime-policy"
+      Users: [!Ref AppUser]
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: [s3:PutObject, s3:GetObject]
+            Resource: !Sub "${EvidenceBucket.Arn}/*"
+          - Effect: Allow
+            Action: [rekognition:DetectLabels]
+            Resource: "*"
+          - Effect: Allow
+            Action: [bedrock:InvokeModel]
+            Resource: "*"
+          - Effect: Allow
+            Action: [sns:Publish]
+            Resource: !Ref DepartmentTopic
+
+  AppAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref AppUser
+
+Outputs:
+  BucketName:
+    Value: !Ref EvidenceBucket
+  TopicArn:
+    Value: !Ref DepartmentTopic
+  AccessKeyId:
+    Value: !Ref AppAccessKey
+  SecretAccessKey:
+    Value: !GetAtt AppAccessKey.SecretAccessKey

@@ -1,61 +1,139 @@
-# EcoGuardian AI
+# 🌿 EcoGuardian AI
 
-AI-powered civic and environmental intelligence: citizens upload a photo, location is attached, AI classifies the issue and severity, the ticket is routed to the right department, and authorities work a live priority dashboard. Citizens track the same record.
+> **AI-powered environmental issue reporting platform built with Next.js and AWS AI.**
 
-Air, water, waste, and heat sit in **one** queue — not four disconnected apps.
+EcoGuardian AI helps citizens report environmental and civic issues such as **waste dumping, water leakage, air pollution, fire hazards, and heat-related issues** using a simple photo upload. The platform uses **AWS AI services** to classify the issue, determine its severity, and automatically route it to the correct department. Authorities can monitor reports through a live dashboard while citizens track their complaints in real time.
 
-## What you can do
+---
 
-- **Citizen report** — photo, GPS, optional notes
-- **AI triage** — Amazon Rekognition labels + Amazon Bedrock (Claude) for category and severity; heuristic fallback if AWS is not configured
-- **Routing** — waste, water, pollution, fire, parks, stormwater, public health
-- **Authority dashboard** — live map, priority score, status updates
-- **Tracking** — shareable `EG-XXXXXX` codes and citizen confirmations
+# 🚀 Live Demo
 
-## Run locally (no AWS required)
+🔗 Live Website:https://eco-guardian-ai-eta.vercel.app/
+
+💻 GitHub Repository: https://github.com/Tashu-Pal/Eco-guardian-AI
+
+---
+
+# ✨ Features
+
+### 👤 Citizen Portal
+- 📷 Upload environmental issue with photo
+- 📍 Automatic GPS location detection
+- 📝 Add optional description and landmark
+- 🎫 Unique tracking ID for every complaint
+- 🔍 Track complaint status in real time
+
+### 🤖 AI-Powered Analysis
+- Amazon Bedrock for issue classification
+- Amazon Rekognition for image understanding
+- Automatic severity prediction
+- Smart department routing
+
+### 🏛 Authority Dashboard
+- Live issue monitoring
+- Interactive issue map
+- Priority-based report management
+- Status updates
+- Citizen confirmation tracking
+
+---
+
+# 🛠 Tech Stack
+
+### Frontend
+- Next.js 15
+- React
+- TypeScript
+- Tailwind CSS
+
+### AWS Services
+- Amazon Bedrock
+- Amazon Rekognition
+- Amazon S3
+- Amazon SNS
+- AWS CloudFormation
+
+---
+
+# 📂 Project Structure
+
+```
+app/
+components/
+lib/
+infra/
+```
+
+---
+
+# ⚙️ Run Locally
+
+Clone the repository
+
+```bash
+git clone https://github.com/Tashu-Pal/Eco-guardian-AI.git
+```
+
+Go to project folder
+
+```bash
+cd Eco-guardian-AI
+```
+
+Install dependencies
 
 ```bash
 npm install
+```
+
+Create environment file
+
+```bash
 cp .env.example .env.local
+```
+
+Run the project
+
+```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Demo reports are seeded on first launch into `data/reports.json`. Photos without S3 are stored under `data/uploads`.
+Open
 
-## AWS (when you are ready)
-
-| Piece | Service | Why |
-| --- | --- | --- |
-| Photos | **S3** | Evidence that scales beyond the app server |
-| Scene labels | **Rekognition** | Detects smoke, garbage, water, vegetation, fire-like scenes |
-| Issue + severity | **Bedrock** (Claude 3 Haiku) | Structured civic classification from the photo |
-| Department alerts | **SNS** | Fan-out to WhatsApp/SMS/email bridges later |
-| Hosting (optional) | **Amplify** or **App Runner** | Deploy this Next.js app |
-
-1. Enable Bedrock model access for Claude 3 Haiku in `ap-south-1` (or your `AWS_REGION`).
-2. Deploy infra:
-
-```bash
-aws cloudformation deploy \
-  --template-file infra/cloudformation.yaml \
-  --stack-name ecoguardian-ai \
-  --capabilities CAPABILITY_NAMED_IAM
+```
+http://localhost:3000
 ```
 
-3. Copy stack outputs into `.env.local` (`AWS_*`, `S3_BUCKET`, `SNS_TOPIC_ARN`).
-4. Restart `npm run dev`. New photos go to S3; classification uses Rekognition then Bedrock.
+---
 
-Keep IAM keys in `.env.local` only. The CloudFormation template creates a runtime user with S3, Rekognition, Bedrock, and SNS — not console admin.
+# 🌍 Problem Statement
 
-## Priority model
+Environmental issues are often reported through different platforms, causing delays and confusion.
 
-`priority = severity×12 + freshness(hours remaining in a 24h window) + confirmations×4`
+EcoGuardian AI provides a **single unified platform** where citizens can report issues with a photo. AI automatically analyzes the report, assigns severity, and routes it to the appropriate department while authorities monitor everything from one dashboard.
 
-Fire and major leaks score higher; older tickets decay unless more citizens confirm them.
+---
 
-## Project layout
+# 💡 Future Scope
 
-- `app/` — pages and API routes
-- `lib/aws/` — S3, Rekognition/Bedrock, SNS
-- `lib/store.ts` — JSON store (swap for DynamoDB/RDS later)
-- `infra/cloudformation.yaml` — AWS starter stack
+- Real-time notifications
+- Mobile application
+- Multi-language support
+- Predictive environmental analytics
+- Integration with municipal authorities
+- AI-powered recommendations
+
+---
+
+# 👨‍💻 Team
+
+- **Tashu Pal**
+- **Akshat**
+- **Sheersh**
+- **Ketan**
+
+---
+
+# 📜 License
+
+This project was developed for the **AWS Build Hackathon 2026**.
